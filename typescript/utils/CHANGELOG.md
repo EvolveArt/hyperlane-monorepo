@@ -1,5 +1,15 @@
 # @hyperlane-xyz/utils
 
+## 3.11.0
+
+### Minor Changes
+
+- b63714ede: Convert all public hyperlane npm packages from CJS to pure ESM
+
+### Patch Changes
+
+- 2b3f75836: Add objLength and isObjEmpty utils
+
 ## 3.10.0
 
 ### Minor Changes

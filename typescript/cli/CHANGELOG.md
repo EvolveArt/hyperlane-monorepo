@@ -1,5 +1,22 @@
 # @hyperlane-xyz/cli
 
+## 3.11.0
+
+### Minor Changes
+
+- aea79c686: Adds single-chain dry-run support for deploying warp routes & gas estimation for core and warp route dry-run deployments.
+- 917266dce: Add --self-relay to CLI commands
+- b63714ede: Convert all public hyperlane npm packages from CJS to pure ESM
+
+### Patch Changes
+
+- Updated dependencies [917266dce]
+- Updated dependencies [aab63d466]
+- Updated dependencies [b63714ede]
+- Updated dependencies [2b3f75836]
+  - @hyperlane-xyz/sdk@3.11.0
+  - @hyperlane-xyz/utils@3.11.0
+
 ## 3.10.0
 
 ### Minor Changes

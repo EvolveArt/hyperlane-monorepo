@@ -1,5 +1,19 @@
 # @hyperlane-xyz/helloworld
 
+## 3.11.0
+
+### Minor Changes
+
+- b63714ede: Convert all public hyperlane npm packages from CJS to pure ESM
+
+### Patch Changes
+
+- Updated dependencies [917266dce]
+- Updated dependencies [aab63d466]
+- Updated dependencies [b63714ede]
+  - @hyperlane-xyz/sdk@3.11.0
+  - @hyperlane-xyz/core@3.11.0
+
 ## 3.10.0
 
 ### Minor Changes
