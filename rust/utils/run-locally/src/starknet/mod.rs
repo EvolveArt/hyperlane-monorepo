@@ -311,14 +311,14 @@ fn run_locally() {
     //     })
     //     .collect::<Vec<_>>();
 
-    let deployer = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"; // 1st katana account
-    let _linker = "validator";
-    let validator = &ValidatorConfig {
-        private_key: "0x219fb2d099a9458f7c10c2efbb8b101d9e0ec85610d5c74a887d1d4fb8d2898"
-            .to_string(),
-        address: "0x7ee358b1bed689e66605aae4e7ab873f818dc953b39f115929ec00c0e575c52".to_string(),
-    };
-    let _relayer = "hpl-relayer";
+    // let deployer = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"; // 1st katana account
+    // let _linker = "validator";
+    // let validator = &ValidatorConfig {
+    //     private_key: "0x219fb2d099a9458f7c10c2efbb8b101d9e0ec85610d5c74a887d1d4fb8d2898"
+    //         .to_string(),
+    //     address: "0x7ee358b1bed689e66605aae4e7ab873f818dc953b39f115929ec00c0e575c52".to_string(),
+    // };
+    // let _relayer = "hpl-relayer";
 
     // sleep(Duration::from_secs(5));
 
