@@ -7,7 +7,7 @@ use sea_orm::{
     prelude::*, sea_query::OnConflict, ActiveValue::*, DeriveColumn, EnumIter, Insert, NotSet,
     QuerySelect,
 };
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use super::generated::transaction;
 use crate::{
@@ -101,7 +101,7 @@ impl ScraperDb {
             .collect::<Result<Vec<_>>>()?;
 
         debug_assert!(!models.is_empty());
-        debug!(txns = models.len(), "Writing txns to database");
+        info!(txns = models.len(), "Writing txns to database");
         trace!(?models, "Writing txns to database");
 
         match Insert::many(models)

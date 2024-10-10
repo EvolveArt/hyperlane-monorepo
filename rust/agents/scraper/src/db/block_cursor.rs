@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 use eyre::Result;
 use sea_orm::{prelude::*, ActiveValue, Insert, Order, QueryOrder, QuerySelect};
 use tokio::sync::RwLock;
-use tracing::{debug, info, instrument, warn};
+use tracing::{info, instrument, warn};
 
 use crate::db::ScraperDb;
 
@@ -89,11 +89,11 @@ impl BlockCursor {
                 time_created: ActiveValue::NotSet,
                 height: ActiveValue::Set(height as i64),
             };
-            debug!(?model, "Inserting cursor");
+            info!(?model, "Inserting cursor");
             if let Err(e) = Insert::one(model).exec(&self.db).await {
                 warn!(error = ?e, "Failed to update database with new cursor. When you just started this, ensure that the migrations included this domain.")
             } else {
-                debug!(cursor = ?*inner, "Updated cursor")
+                info!(cursor = ?*inner, "Updated cursor")
             }
         }
     }

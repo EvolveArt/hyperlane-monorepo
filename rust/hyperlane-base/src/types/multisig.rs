@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use derive_new::new;
 use eyre::Result;
-use tracing::{debug, instrument};
+use tracing::{info, instrument};
 
 use hyperlane_core::{
     HyperlaneDomain, MultisigSignedCheckpoint, SignedCheckpointWithMessageId, H160, H256,
@@ -44,11 +44,11 @@ impl MultisigCheckpointSyncer {
                 // Gracefully handle errors getting the latest_index
                 match checkpoint_syncer.latest_index().await {
                     Ok(Some(index)) => {
-                        debug!(?address, ?index, "Validator returned latest index");
+                        info!(?address, ?index, "Validator returned latest index");
                         latest_indices.insert(H160::from(*validator), Some(index));
                     }
                     result => {
-                        debug!(
+                        info!(
                             ?address,
                             ?result,
                             "Failed to get latest index from validator"
@@ -101,13 +101,13 @@ impl MultisigCheckpointSyncer {
             .get_validator_latest_checkpoints_and_update_metrics(validators, origin, destination)
             .await;
 
-        debug!(
+        info!(
             ?latest_indices,
             "Fetched latest indices from checkpoint syncers"
         );
 
         if latest_indices.is_empty() {
-            debug!("No validators returned a latest index");
+            info!("No validators returned a latest index");
             return Ok(None);
         }
 
@@ -120,7 +120,7 @@ impl MultisigCheckpointSyncer {
             // generate a proof.
             let start_index = highest_quorum_index.min(maximum_index);
             if minimum_index > start_index {
-                debug!(%start_index, %highest_quorum_index, "Highest quorum index is below the minimum index");
+                info!(%start_index, %highest_quorum_index, "Highest quorum index is below the minimum index");
                 return Ok(None);
             }
             for index in (minimum_index..=start_index).rev() {
@@ -131,7 +131,7 @@ impl MultisigCheckpointSyncer {
                 }
             }
         }
-        debug!("No checkpoint found in range");
+        info!("No checkpoint found in range");
         Ok(None)
     }
 
@@ -161,7 +161,7 @@ impl MultisigCheckpointSyncer {
                 {
                     // If the signed checkpoint is for a different index, ignore it
                     if signed_checkpoint.value.index != index {
-                        debug!(
+                        info!(
                             validator = format!("{:#x}", validator),
                             index = index,
                             checkpoint_index = signed_checkpoint.value.index,
@@ -174,7 +174,7 @@ impl MultisigCheckpointSyncer {
                     let signer = signed_checkpoint.recover()?;
 
                     if H256::from(signer) != *validator {
-                        debug!(
+                        info!(
                             validator = format!("{:#x}", validator),
                             index = index,
                             "Checkpoint signature mismatch"
@@ -189,7 +189,7 @@ impl MultisigCheckpointSyncer {
 
                     // Count the number of signatures for this signed checkpoint
                     let signature_count = signed_checkpoints.len();
-                    debug!(
+                    info!(
                         validator = format!("{:#x}", validator),
                         index = index,
                         root = format!("{:#x}", root),
@@ -200,22 +200,22 @@ impl MultisigCheckpointSyncer {
                     // If we've hit a quorum, create a MultisigSignedCheckpoint
                     if signature_count >= threshold {
                         let checkpoint: MultisigSignedCheckpoint = signed_checkpoints.try_into()?;
-                        debug!(checkpoint=?checkpoint, "Fetched multisig checkpoint");
+                        info!(checkpoint=?checkpoint, "Fetched multisig checkpoint");
                         return Ok(Some(checkpoint));
                     }
                 } else {
-                    debug!(
+                    info!(
                         validator = format!("{:#x}", validator),
                         index = index,
                         "Unable to find signed checkpoint"
                     );
                 }
             } else {
-                debug!(%validator, "Unable to find checkpoint syncer");
+                info!(%validator, "Unable to find checkpoint syncer");
                 continue;
             }
         }
-        debug!("No quorum checkpoint found for message");
+        info!("No quorum checkpoint found for message");
         Ok(None)
     }
 }

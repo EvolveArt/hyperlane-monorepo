@@ -3,7 +3,7 @@ use sea_orm::{
     prelude::*, ActiveValue::*, DbErr, EntityTrait, FromQueryResult, Insert, QueryResult,
     QuerySelect,
 };
-use tracing::{debug, trace};
+use tracing::{info, trace};
 
 use hyperlane_core::{BlockInfo, H256};
 use migration::OnConflict;
@@ -94,7 +94,7 @@ impl ScraperDb {
             .collect::<Vec<_>>();
 
         debug_assert!(!models.is_empty());
-        debug!(blocks = models.len(), "Writing blocks to database");
+        info!(blocks = models.len(), "Writing blocks to database");
         trace!(?models, "Writing blocks to database");
         match Insert::many(models)
             .on_conflict(

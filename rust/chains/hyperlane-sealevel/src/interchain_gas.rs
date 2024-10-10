@@ -165,14 +165,14 @@ impl SealevelInterchainGasPaymasterIndexer {
             },
             with_context: Some(false),
         };
-        tracing::debug!(config=?config, "Fetching program accounts");
+        tracing::info!(config=?config, "Fetching program accounts");
         let accounts = self
             .rpc_client
             .get_program_accounts_with_config(&self.igp.program_id, config)
             .await
             .map_err(ChainCommunicationError::from_other)?;
 
-        tracing::debug!(accounts=?accounts, "Fetched program accounts");
+        tracing::info!(accounts=?accounts, "Fetched program accounts");
 
         // Now loop through matching accounts and find the one with a valid account pubkey
         // that proves it's an actual gas payment PDA.
@@ -213,7 +213,7 @@ impl SealevelInterchainGasPaymasterIndexer {
             .map_err(ChainCommunicationError::from_other)?
             .into_inner();
 
-        tracing::debug!(gas_payment_account=?gas_payment_account, "Found gas payment account");
+        tracing::info!(gas_payment_account=?gas_payment_account, "Found gas payment account");
 
         let igp_payment = InterchainGasPayment {
             message_id: gas_payment_account.message_id,
@@ -263,7 +263,7 @@ impl Indexer<InterchainGasPayment> for SealevelInterchainGasPaymasterIndexer {
                 if igp_account_filter == sealevel_payment.igp_account_pubkey {
                     payments.push((sealevel_payment.payment, sealevel_payment.log_meta));
                 } else {
-                    tracing::debug!(sealevel_payment=?sealevel_payment, igp_account_filter=?igp_account_filter, "Found interchain gas payment for a different IGP account, skipping");
+                    tracing::info!(sealevel_payment=?sealevel_payment, igp_account_filter=?igp_account_filter, "Found interchain gas payment for a different IGP account, skipping");
                 }
             }
         }

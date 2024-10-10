@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use eyre::{bail, Result};
 use paste::paste;
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use hyperlane_core::{
     GasPaymentKey, HyperlaneDomain, HyperlaneLogStore, HyperlaneMessage,
@@ -91,7 +91,7 @@ impl HyperlaneRocksDB {
         }
 
         let id = message.id();
-        debug!(msg=?message,  "Storing new message in db",);
+        info!(msg=?message,  "Storing new message in db",);
 
         // - `id` --> `message`
         self.store_message_by_id(&id, message)?;
@@ -200,7 +200,7 @@ impl HyperlaneRocksDB {
         insertion_block_number: u64,
     ) -> DbResult<bool> {
         if let Ok(Some(_)) = self.retrieve_merkle_tree_insertion_by_leaf_index(&insertion.index()) {
-            debug!(insertion=?insertion, "Tree insertion already stored in db");
+            info!(insertion=?insertion, "Tree insertion already stored in db");
             return Ok(false);
         }
 
@@ -236,7 +236,7 @@ impl HyperlaneRocksDB {
             };
         let total = existing_payment + event;
 
-        debug!(?event, new_total_gas_payment=?total, "Storing gas payment");
+        info!(?event, new_total_gas_payment=?total, "Storing gas payment");
         self.store_interchain_gas_payment_data_by_gas_payment_key(&gas_payment_key, &total.into())?;
 
         Ok(())
@@ -250,7 +250,7 @@ impl HyperlaneRocksDB {
         let existing_expenditure = self.retrieve_gas_expenditure_by_message_id(event.message_id)?;
         let total = existing_expenditure + event;
 
-        debug!(?event, new_total_gas_expenditure=?total, "Storing gas expenditure");
+        info!(?event, new_total_gas_expenditure=?total, "Storing gas expenditure");
         self.store_interchain_gas_expenditure_data_by_message_id(
             &total.message_id,
             &InterchainGasExpenditureData {
@@ -298,7 +298,7 @@ impl HyperlaneLogStore<HyperlaneMessage> for HyperlaneRocksDB {
             }
         }
         if stored > 0 {
-            debug!(messages = stored, "Wrote new messages to database");
+            info!(messages = stored, "Wrote new messages to database");
         }
         Ok(stored)
     }
@@ -317,7 +317,7 @@ async fn store_and_count_new<T: Copy>(
         }
     }
     if new_logs > 0 {
-        debug!(new_logs, log_type, "Wrote new logs to database");
+        info!(new_logs, log_type, "Wrote new logs to database");
     }
     Ok(new_logs)
 }

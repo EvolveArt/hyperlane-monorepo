@@ -9,7 +9,7 @@ use tendermint::Hash;
 use tendermint_rpc::endpoint::block::Response as BlockResponse;
 use tendermint_rpc::endpoint::block_results::Response as BlockResultsResponse;
 use tendermint_rpc::HttpClient;
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use crate::address::CosmosAddress;
 use crate::{ConnectionConf, CosmosProvider, HyperlaneCosmosError};
@@ -150,11 +150,11 @@ impl CosmosWasmIndexer {
             .enumerate()
             .filter_map(move |(idx, tx)| {
                 let Some(tx_hash) = tx_hashes.get(idx) else {
-                    debug!(?tx, "No tx hash found for tx");
+                    info!(?tx, "No tx hash found for tx");
                     return None;
                 };
                 if tx.code.is_err() {
-                    debug!(?tx_hash, "Not indexing failed transaction");
+                    info!(?tx_hash, "Not indexing failed transaction");
                     return None;
                 }
                 Some(self.handle_tx(block.clone(), tx.events, *tx_hash, idx, parser))
@@ -237,7 +237,7 @@ impl WasmIndexer for CosmosWasmIndexer {
         T: Send + Sync + PartialEq + Debug + 'static,
     {
         let client = self.provider.rpc().clone();
-        debug!(?block_number, cursor_label, domain=?self.provider.domain, "Getting logs in block");
+        info!(?block_number, cursor_label, domain=?self.provider.domain, "Getting logs in block");
 
         // The two calls below could be made in parallel, but on cosmos rate limiting is a bigger problem
         // than indexing latency, so we do them sequentially.

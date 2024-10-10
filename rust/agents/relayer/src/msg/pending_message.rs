@@ -16,7 +16,7 @@ use hyperlane_core::{
 };
 use prometheus::{IntCounter, IntGauge};
 use serde::Serialize;
-use tracing::{debug, error, info, info_span, instrument, trace, warn, Instrument};
+use tracing::{error, info, info_span, instrument, trace, warn, Instrument};
 
 use super::{
     gas_payment::{GasPaymentEnforcer, GasPolicyStatus},
@@ -192,7 +192,7 @@ impl PendingOperation for PendingMessage {
             }
         };
         if is_already_delivered {
-            debug!("Message has already been delivered, marking as submitted.");
+            info!("Message has already been delivered, marking as submitted.");
             self.submitted = true;
             self.set_next_attempt_after(CONFIRM_DELAY);
             return PendingOperationResult::Confirm(ConfirmReason::AlreadySubmitted);
@@ -298,7 +298,7 @@ impl PendingOperation for PendingMessage {
         };
 
         // Go ahead and attempt processing of message to destination chain.
-        debug!(
+        info!(
             ?gas_limit,
             ?tx_cost_estimate,
             "Gas payment requirement met, ready to process message"
@@ -429,7 +429,7 @@ impl PendingOperation for PendingMessage {
         }
         // set the outcome in `Self` as well, for later logging
         self.set_submission_outcome(operation_outcome);
-        debug!(
+        info!(
             actual_gas_for_message = ?gas_used_by_operation,
             message_gas_estimate = ?operation_estimate,
             submission_gas_estimate = ?submission_estimated_cost,

@@ -18,8 +18,7 @@ use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 use tokio::time::sleep;
 use tokio_metrics::TaskMonitor;
-use tracing::{debug, info_span, instrument, instrument::Instrumented, trace, Instrument};
-use tracing::{info, warn};
+use tracing::{info, info_span, instrument, instrument::Instrumented, trace, warn, Instrument};
 
 use hyperlane_base::CoreMetrics;
 use hyperlane_core::{
@@ -270,7 +269,7 @@ async fn prepare_task(
         for (op, prepare_result) in batch.into_iter().zip(res.into_iter()) {
             match prepare_result {
                 PendingOperationResult::Success => {
-                    debug!(?op, "Operation prepared");
+                    info!(?op, "Operation prepared");
                     metrics.ops_prepared.inc();
                     // TODO: push multiple messages at once
                     submit_queue
@@ -290,7 +289,7 @@ async fn prepare_task(
                     metrics.ops_dropped.inc();
                 }
                 PendingOperationResult::Confirm(reason) => {
-                    debug!(?op, "Pushing operation to confirm queue");
+                    info!(?op, "Pushing operation to confirm queue");
                     confirm_queue
                         .push(op, Some(PendingOperationStatus::Confirm(reason)))
                         .await;
@@ -343,7 +342,7 @@ async fn submit_single_operation(
 ) {
     let destination = op.destination_domain().clone();
     op.submit().await;
-    debug!(?op, "Operation submitted");
+    info!(?op, "Operation submitted");
     op.set_next_attempt_after(CONFIRM_DELAY);
     confirm_queue
         .push(op, Some(PendingOperationStatus::Confirm(SubmittedBySelf)))
@@ -416,7 +415,7 @@ async fn confirm_operation(
     let operation_result = op.confirm().await;
     match &operation_result {
         PendingOperationResult::Success => {
-            debug!(?op, "Operation confirmed");
+            info!(?op, "Operation confirmed");
             metrics.ops_confirmed.inc();
         }
         PendingOperationResult::NotReady => {

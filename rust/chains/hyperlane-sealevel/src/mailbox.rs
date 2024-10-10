@@ -5,7 +5,7 @@ use std::{collections::HashMap, num::NonZeroU64, ops::RangeInclusive, str::FromS
 use async_trait::async_trait;
 use borsh::{BorshDeserialize, BorshSerialize};
 use jsonrpc_core::futures_util::TryFutureExt;
-use tracing::{debug, info, instrument, warn};
+use tracing::{info, instrument, warn};
 
 use hyperlane_core::{
     accumulator::incremental::IncrementalMerkle, BatchItem, ChainCommunicationError, ChainResult,
@@ -87,7 +87,7 @@ impl SealevelMailbox {
         let inbox = Pubkey::find_program_address(mailbox_inbox_pda_seeds!(), &program_id);
         let outbox = Pubkey::find_program_address(mailbox_outbox_pda_seeds!(), &program_id);
 
-        debug!(
+        info!(
             "domain={}\nmailbox={}\ninbox=({}, {})\noutbox=({}, {})",
             domain, program_id, inbox.0, inbox.1, outbox.0, outbox.1,
         );

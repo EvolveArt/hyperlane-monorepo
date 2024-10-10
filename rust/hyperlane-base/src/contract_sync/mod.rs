@@ -16,7 +16,7 @@ pub use metrics::ContractSyncMetrics;
 use prometheus::core::{AtomicI64, AtomicU64, GenericCounter, GenericGauge};
 use tokio::sync::mpsc::{error::TryRecvError, Receiver as MpscReceiver};
 use tokio::time::sleep;
-use tracing::{debug, info, instrument, trace, warn};
+use tracing::{info, instrument, trace, warn};
 
 use crate::settings::IndexSettings;
 
@@ -155,7 +155,7 @@ where
             // from the loop (the sleep duration)
             #[allow(clippy::never_loop)]
             CursorAction::Query(range) => loop {
-                debug!(?range, "Looking for events in index range");
+                info!(?range, "Looking for events in index range");
 
                 let logs = match self.indexer.fetch_logs_in_range(range.clone()).await {
                     Ok(logs) => logs,
@@ -213,7 +213,7 @@ where
             }
         };
         if stored > 0 {
-            debug!(
+            info!(
                 domain = self.domain.as_ref(),
                 count = stored,
                 sequences = ?logs.iter().map(|(log, _)| log.sequence).collect::<Vec<_>>(),

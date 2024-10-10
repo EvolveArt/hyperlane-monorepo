@@ -2,7 +2,7 @@
   "name": "pragmadevnet",
   "domainId": 6363709,
   "mailbox": "0x06a2f7a45b29fc7c9854a6fe5228bdff5311884c804cb6b46553ba4cde235f1e",
-  "interchainGasPaymaster": "0x0",
+  "interchainGasPaymaster": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
   "validatorAnnounce": "0x0763f37d77dfbca6e01a7a3299a73a86086cda87add4ae8ac35cf6ca278a893b",
   "merkleTreeHook": "0x03531fcf312035d230bc0e68fc0198457f44a82d0f1f67f418b227b80788a390",
   "protocol": "starknet",
@@ -13,8 +13,8 @@
     }
   ],
   "index": {
-    "from": 1,
-    "chunk": 100
+    "from": 9950,
+    "chunk": 1
   },
   "metricsPort": 9090,
   "contractAddressBytes": 32,

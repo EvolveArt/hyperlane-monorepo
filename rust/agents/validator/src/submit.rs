@@ -7,7 +7,7 @@ use hyperlane_core::rpc_clients::call_and_retry_indefinitely;
 use hyperlane_core::{ChainResult, MerkleTreeHook};
 use prometheus::IntGauge;
 use tokio::time::sleep;
-use tracing::{debug, error, info};
+use tracing::{error, info};
 
 use hyperlane_base::{db::HyperlaneRocksDB, CheckpointSyncer, CoreMetrics};
 use hyperlane_core::{
@@ -115,7 +115,7 @@ impl ValidatorSubmitter {
             // In this case, we just sleep a bit until we fetch a new latest checkpoint
             // that at least meets the tree.
             if tree_exceeds_checkpoint(&latest_checkpoint, &tree) {
-                debug!(
+                info!(
                     ?latest_checkpoint,
                     tree_count = tree.count(),
                     "Latest checkpoint is behind tree, sleeping briefly"
@@ -169,7 +169,7 @@ impl ValidatorSubmitter {
                     )
                 })
             {
-                debug!(
+                info!(
                     index = insertion.index(),
                     queue_length = checkpoint_queue.len(),
                     "Ingesting leaf to tree"
@@ -237,14 +237,14 @@ impl ValidatorSubmitter {
             .fetch_checkpoint(checkpoint.index)
             .await?;
         if existing.is_some() {
-            debug!(index = checkpoint.index, "Checkpoint already submitted");
+            info!(index = checkpoint.index, "Checkpoint already submitted");
             return Ok(());
         }
         let signed_checkpoint = self.signer.sign(checkpoint).await?;
         self.checkpoint_syncer
             .write_checkpoint(&signed_checkpoint)
             .await?;
-        debug!(index = checkpoint.index, "Signed and submitted checkpoint");
+        info!(index = checkpoint.index, "Signed and submitted checkpoint");
 
         // TODO: move these into S3 implementations
         // small sleep before signing next checkpoint to avoid rate limiting

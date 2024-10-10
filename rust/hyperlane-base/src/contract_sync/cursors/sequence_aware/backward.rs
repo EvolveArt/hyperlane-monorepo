@@ -10,7 +10,7 @@ use hyperlane_core::{
 };
 use itertools::Itertools;
 use tokio::time::sleep;
-use tracing::{debug, instrument, warn};
+use tracing::{info, instrument, warn};
 
 use super::{LastIndexedSnapshot, TargetSnapshot};
 
@@ -143,7 +143,7 @@ impl<T: Debug> BackwardSequenceAwareSyncCursor<T> {
 
                 self.current_indexing_snapshot = self.last_indexed_snapshot.previous_target();
 
-                debug!(
+                info!(
                     last_indexed_snapshot=?self.last_indexed_snapshot,
                     current_indexing_snapshot=?self.current_indexing_snapshot,
                     "Fast forwarded current sequence"

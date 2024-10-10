@@ -13,7 +13,7 @@ use hyperlane_core::{
     SequenceIndexed,
 };
 use itertools::Itertools;
-use tracing::{debug, instrument, warn};
+use tracing::{info, instrument, warn};
 
 use super::{LastIndexedSnapshot, TargetSnapshot};
 
@@ -207,7 +207,7 @@ impl<T: Debug> ForwardSequenceAwareSyncCursor<T> {
 
             self.current_indexing_snapshot = self.last_indexed_snapshot.next_target();
 
-            debug!(
+            info!(
                 last_indexed_snapshot=?self.last_indexed_snapshot,
                 current_indexing_snapshot=?self.current_indexing_snapshot,
                 "Fast forwarded current sequence"

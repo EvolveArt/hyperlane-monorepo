@@ -10,7 +10,7 @@ use hyperlane_base::MultisigCheckpointSyncer;
 use hyperlane_core::accumulator::merkle::Proof;
 use hyperlane_core::{HyperlaneMessage, MultisigSignedCheckpoint, H256};
 use strum::Display;
-use tracing::{debug, info};
+use tracing::info;
 
 use crate::msg::metadata::base::MessageMetadataBuilder;
 
@@ -126,7 +126,7 @@ impl<T: MultisigIsmMetadataBuilder> MetadataBuilder for T {
             .await
             .context(CTX)?
         {
-            debug!(?message, ?metadata.checkpoint, "Found checkpoint with quorum");
+            info!(?message, ?metadata.checkpoint, "Found checkpoint with quorum");
             Ok(Some(self.format_metadata(metadata)?))
         } else {
             info!(

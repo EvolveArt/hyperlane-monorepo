@@ -7,7 +7,7 @@ use hyperlane_core::{
     FixedPointNumber, GasPaymentKey, HyperlaneMessage, InterchainGasExpenditure,
     InterchainGasPayment, TxCostEstimate, TxOutcome, U256,
 };
-use tracing::{debug, error, trace};
+use tracing::{error, info, trace};
 
 use self::policies::{GasPaymentPolicyMinimum, GasPaymentPolicyNone};
 use crate::{
@@ -119,7 +119,7 @@ impl GasPaymentEnforcer {
                 ?whitelist,
                 "Message matched whitelist for policy"
             );
-            debug!(
+            info!(
                 msg=%message,
                 ?policy,
                 ?current_payment,
@@ -157,7 +157,7 @@ impl GasPaymentEnforcer {
 
     pub fn record_tx_outcome(&self, message: &HyperlaneMessage, outcome: TxOutcome) -> Result<()> {
         // This log is required in E2E, hence the use of a `const`
-        debug!(
+        info!(
             msg=%message,
             ?outcome,
             "{}",

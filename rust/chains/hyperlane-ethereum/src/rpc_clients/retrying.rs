@@ -10,7 +10,7 @@ use serde::{de::DeserializeOwned, Serialize};
 use serde_json::Value;
 use thiserror::Error;
 use tokio::time::sleep;
-use tracing::{debug, error, instrument, trace, warn_span};
+use tracing::{error, info, instrument, trace, warn_span};
 
 /// An HTTP Provider with a simple naive exponential backoff built-in
 #[derive(Debug, Clone)]
@@ -95,7 +95,7 @@ where
             let mut rate_limited = false;
             let backoff_ms = self.base_retry_ms * 2u64.pow(i - 1);
             trace!(params = %serde_json::to_string(&params).unwrap_or_default(), "Dispatching request with params");
-            debug!(attempt = i, "Dispatching request");
+            info!(attempt = i, "Dispatching request");
 
             let fut = match params {
                 Value::Null => self.inner.request(method, ()),

@@ -201,7 +201,7 @@ fn launch_starknet_validator(
         )
         .hyp_env("SIGNER_SIGNER_TYPE", agent_config.signer.typ)
         .hyp_env("SIGNER_KEY", agent_config.signer.key)
-        .hyp_env("TRACING_LEVEL", if debug { "debug" } else { "info" })
+        .hyp_env("TRACING_LEVEL", "true")
         .spawn("VAL", None);
 
     validator

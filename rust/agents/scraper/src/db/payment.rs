@@ -1,7 +1,7 @@
 use eyre::{eyre, Result};
 use itertools::Itertools;
 use sea_orm::{prelude::*, ActiveValue::*, Insert, QuerySelect};
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use hyperlane_core::{InterchainGasPayment, LogMeta};
 use migration::OnConflict;
@@ -68,7 +68,7 @@ impl ScraperDb {
             .await?;
 
         if new_payments_count > 0 {
-            debug!(
+            info!(
                 payments = new_payments_count,
                 "Wrote new gas payments to database"
             );

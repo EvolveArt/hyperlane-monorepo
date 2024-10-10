@@ -36,7 +36,7 @@ use tonic::{
     transport::{Channel, Endpoint},
     GrpcMethod, IntoRequest,
 };
-use tracing::{debug, instrument};
+use tracing::{info, instrument};
 use url::Url;
 
 use crate::{address::CosmosAddress, CosmosAmount};
@@ -599,7 +599,7 @@ impl WasmProvider for WasmGrpcProvider {
                 Box::pin(future)
             })
             .await?;
-        debug!(tx_result=?tx_res, domain=?self.domain, ?payload, "Wasm transaction sent");
+        info!(tx_result=?tx_res, domain=?self.domain, ?payload, "Wasm transaction sent");
         Ok(tx_res)
     }
 

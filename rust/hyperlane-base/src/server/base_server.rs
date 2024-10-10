@@ -53,7 +53,7 @@ impl Server {
     /// Gather available metrics into an encoded (plaintext, OpenMetrics format)
     /// report.
     async fn gather_metrics(core_metrics: Arc<CoreMetrics>) -> impl IntoResponse {
-        tracing::debug!("Traversing route for /metrics endpoint for serving Prometheus metrics");
+        tracing::info!("Traversing route for /metrics endpoint for serving Prometheus metrics");
         match core_metrics.gather() {
             Ok(metrics) => {
                 let metrics = match String::from_utf8(metrics) {

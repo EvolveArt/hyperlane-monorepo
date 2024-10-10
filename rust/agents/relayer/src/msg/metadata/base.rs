@@ -31,7 +31,7 @@ use hyperlane_core::{
 };
 
 use tokio::sync::RwLock;
-use tracing::{debug, info, instrument, warn};
+use tracing::{info, instrument, warn};
 
 #[derive(Debug, thiserror::Error)]
 pub enum MetadataBuilderError {
@@ -377,7 +377,7 @@ impl BaseMetadataBuilder {
         for (&validator, validator_storage_locations) in validators.iter().zip(storage_locations) {
             for storage_location in validator_storage_locations.iter().rev() {
                 let Ok(config) = CheckpointSyncerConf::from_str(storage_location) else {
-                    debug!(
+                    info!(
                         ?validator,
                         ?storage_location,
                         "Could not parse checkpoint syncer config for validator"
@@ -390,7 +390,7 @@ impl BaseMetadataBuilder {
                 if !self.allow_local_checkpoint_syncers
                     && matches!(config, CheckpointSyncerConf::LocalStorage { .. })
                 {
-                    debug!(
+                    info!(
                         ?config,
                         "Ignoring disallowed LocalStorage based checkpoint syncer"
                     );
@@ -404,7 +404,7 @@ impl BaseMetadataBuilder {
                         break;
                     }
                     Err(err) => {
-                        debug!(
+                        info!(
                             error=%err,
                             ?config,
                             ?validator,

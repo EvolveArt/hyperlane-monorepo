@@ -133,6 +133,8 @@ impl BaseAgent for Validator {
     async fn run(mut self) {
         let mut tasks = vec![];
 
+        tracing::info!("Starting validator agent");
+
         // run server
         let custom_routes =
             validator_server::routes(self.origin_chain.clone(), self.core.metrics.clone());

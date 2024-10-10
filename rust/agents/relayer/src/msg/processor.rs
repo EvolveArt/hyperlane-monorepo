@@ -17,7 +17,7 @@ use hyperlane_base::{
 use hyperlane_core::{HyperlaneDomain, HyperlaneMessage, QueueOperation};
 use prometheus::IntGauge;
 use tokio::sync::mpsc::UnboundedSender;
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use super::{blacklist::AddressBlacklist, metadata::AppContextClassifier, pending_message::*};
 use crate::{processor::ProcessorExt, settings::matching_list::MatchingList};
@@ -66,7 +66,7 @@ impl ForwardBackwardIterator {
             DirectionalNonceIterator::new(high_nonce, NonceDirection::Low, db, domain.clone());
         // Decrement the low nonce to avoid processing the same message twice, which causes double counts in metrics
         low_nonce_iter.iterate();
-        debug!(
+        info!(
             ?low_nonce_iter,
             ?high_nonce_iter,
             ?domain,
@@ -145,7 +145,7 @@ impl DirectionalNonceIterator {
         match self.direction {
             NonceDirection::High => {
                 self.nonce = self.nonce.map(|n| n.saturating_add(1));
-                debug!(?self, "Iterating high nonce");
+                info!(?self, "Iterating high nonce");
             }
             NonceDirection::Low => {
                 if let Some(nonce) = self.nonce {
@@ -163,7 +163,7 @@ impl DirectionalNonceIterator {
         if let Some(message) = self.indexed_message_with_nonce()? {
             Self::update_max_nonce_gauge(&message, metrics);
             if !self.is_message_processed()? {
-                debug!(?message, iterator=?self, "Found processable message");
+                info!(?message, iterator=?self, "Found processable message");
                 return Ok(MessageStatus::Processable(message));
             } else {
                 return Ok(MessageStatus::Processed);
@@ -244,7 +244,7 @@ impl ProcessorExt for MessageProcessor {
         // nonce.
         // Scan until we find next nonce without delivery confirmation.
         if let Some(msg) = self.try_get_unprocessed_message().await? {
-            debug!(
+            info!(
                 ?msg,
                 cursor = ?self.nonce_iterator,
                 "Processor working on message"
@@ -253,20 +253,20 @@ impl ProcessorExt for MessageProcessor {
 
             // Skip if not whitelisted.
             if !self.message_whitelist.msg_matches(&msg, true) {
-                debug!(?msg, whitelist=?self.message_whitelist, "Message not whitelisted, skipping");
+                info!(?msg, whitelist=?self.message_whitelist, "Message not whitelisted, skipping");
                 return Ok(());
             }
 
             // Skip if the message is blacklisted
             if self.message_whitelist.msg_matches(&msg, false) {
-                debug!(?msg, blacklist=?self.message_whitelist, "Message blacklisted, skipping");
+                info!(?msg, blacklist=?self.message_whitelist, "Message blacklisted, skipping");
                 return Ok(());
             }
 
             // Skip if the message involves a blacklisted address
             if let Some(blacklisted_address) = self.address_blacklist.find_blacklisted_address(&msg)
             {
-                debug!(
+                info!(
                     ?msg,
                     blacklisted_address = hex::encode(blacklisted_address),
                     "Message involves blacklisted address, skipping"
@@ -276,17 +276,17 @@ impl ProcessorExt for MessageProcessor {
 
             // Skip if the message is intended for this origin
             if destination == self.domain().id() {
-                debug!(?msg, "Message destined for self, skipping");
+                info!(?msg, "Message destined for self, skipping");
                 return Ok(());
             }
 
             // Skip if the message is intended for a destination we do not service
             if !self.send_channels.contains_key(&destination) {
-                debug!(?msg, "Message destined for unknown domain, skipping");
+                info!(?msg, "Message destined for unknown domain, skipping");
                 return Ok(());
             }
 
-            debug!(%msg, "Sending message to submitter");
+            info!(%msg, "Sending message to submitter");
 
             let app_context_classifier =
                 AppContextClassifier::new(self.metric_app_contexts.clone());

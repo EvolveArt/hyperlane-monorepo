@@ -1,7 +1,7 @@
 use eyre::Result;
 use itertools::Itertools;
 use sea_orm::{prelude::*, ActiveValue::*, DeriveColumn, EnumIter, Insert, QuerySelect};
-use tracing::{debug, instrument, trace};
+use tracing::{info, instrument, trace};
 
 use hyperlane_core::{HyperlaneMessage, LogMeta, H256};
 use migration::OnConflict;
@@ -49,7 +49,7 @@ impl ScraperDb {
             .one(&self.0)
             .await?
             .map(|idx| idx as u32);
-        debug!(
+        info!(
             ?last_nonce,
             origin_domain,
             ?origin_mailbox,
@@ -197,7 +197,7 @@ impl ScraperDb {
             .await?;
 
         if new_deliveries_count > 0 {
-            debug!(
+            info!(
                 messages = new_deliveries_count,
                 "Wrote new delivered messages to database"
             );
@@ -299,7 +299,7 @@ impl ScraperDb {
             .await?;
 
         if new_dispatch_count > 0 {
-            debug!(
+            info!(
                 messages = new_dispatch_count,
                 "Wrote new messages to database"
             );

@@ -4,7 +4,7 @@ use derive_new::new;
 use hyperlane_core::{PendingOperation, PendingOperationStatus, QueueOperation};
 use prometheus::{IntGauge, IntGaugeVec};
 use tokio::sync::{broadcast::Receiver, Mutex};
-use tracing::{debug, info, instrument};
+use tracing::{info, instrument};
 
 use crate::server::MessageRetryRequest;
 
@@ -63,7 +63,7 @@ impl OpQueue {
         // This function is called very often by the op_submitter tasks, so only log when there are operations to pop
         // to avoid spamming the logs
         if !popped.is_empty() {
-            debug!(
+            info!(
                 queue_label = %self.queue_metrics_label,
                 operations = ?popped,
                 "Popped OpQueue operations"

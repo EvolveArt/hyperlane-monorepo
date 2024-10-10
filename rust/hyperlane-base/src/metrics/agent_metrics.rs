@@ -15,7 +15,7 @@ use prometheus::GaugeVec;
 use prometheus::IntGaugeVec;
 use tokio::{task::JoinHandle, time::MissedTickBehavior};
 use tracing::info_span;
-use tracing::{debug, instrument::Instrumented, trace, warn, Instrument};
+use tracing::{info, instrument::Instrumented, trace, warn, Instrument};
 
 use crate::settings::ChainConf;
 use crate::CoreMetrics;
@@ -179,7 +179,7 @@ impl MetricsUpdater {
             return;
         };
         let chain = self.conf.domain.name();
-        debug!(chain, "Updating metrics");
+        info!(chain, "Updating metrics");
         let chain_metrics = match self.provider.get_chain_metrics().await {
             Ok(Some(chain_metrics)) => chain_metrics,
             Err(err) => {
