@@ -159,11 +159,7 @@ pub enum StarknetCLISource {
 
 impl Default for StarknetCLISource {
     fn default() -> Self {
-        if make_target().starts_with("darwin") {
-            Self::remote("https://github.com/xJonathanLEI/starkli", "0.2.9")
-        } else {
-            Self::remote(STARKNET_CLI_GIT, STARKNET_CLI_VERSION)
-        }
+        Self::remote(STARKNET_CLI_GIT, STARKNET_CLI_VERSION)
     }
 }
 

@@ -29,7 +29,7 @@ mod utils;
 const KATANA_CLI_GIT: &str = "https://github.com/dojoengine/dojo";
 const KATANA_CLI_VERSION: &str = "0.7.0-alpha.3";
 const STARKNET_CLI_GIT: &str = "https://github.com/xJonathanLEI/starkli";
-const STARKNET_CLI_VERSION: &str = "0.2.8";
+const STARKNET_CLI_VERSION: &str = "0.3.5";
 
 const CAIRO_HYPERLANE_GIT: &str = "https://github.com/astraly-labs/hyperlane_starknet";
 const CAIRO_HYPERLANE_VERSION: &str = "0.1.0";
@@ -49,6 +49,7 @@ pub fn install_starknet(
             version: KATANA_CLI_VERSION.to_string(),
         })
         .install(cli_dir);
+    println!("Katanad: {:?}", katanad);
 
     let starklid = starknet_cli_src
         .unwrap_or(StarknetCLISource::Remote {
@@ -150,9 +151,20 @@ fn launch_starknet_node(config: StarknetConfig) -> StarknetResp {
     );
 
     let node: AgentHandles = cli
-        .arg("host", config.node_addr_base.clone())
-        .arg("port", config.node_port_base.to_string())
-        .arg("block-time", "1000".to_string())
+        .flag("devnet")
+        .flag("telemetry-disabled")
+        .flag("prometheus-disabled")
+        .arg(
+            "chain-config-override",
+            "block_time=1s,pending_block_update_time=100ms".to_string(),
+        )
+        // .arg("host", config.node_addr_base.clone())
+        .arg("rpc-port", config.node_port_base.to_string())
+        .arg(
+            "base-path",
+            format!("/tmp/starknet_{:?}", config.node_port_base),
+        )
+        // .arg("block-time", "1000".to_string())
         .spawn("STARKNET", None);
 
     let endpoint: StarknetEndpoint = StarknetEndpoint {
@@ -277,7 +289,7 @@ fn run_locally() {
     let (starklid, katanad, sierra_classes) =
         install_starknet(None, starknet_cli_src, None, cli_src, None, code_src);
 
-    let addr_base = "0.0.0.0";
+    let addr_base = "127.0.0.1";
     let default_config = StarknetConfig {
         cli_path: katanad.clone(),
 
@@ -286,7 +298,7 @@ fn run_locally() {
         node_addr_base: addr_base.to_string(),
         node_port_base: 5050,
 
-        chain_id: "KATANA".to_string(),
+        chain_id: "MADARA_DEVNET".to_string(),
     };
 
     let port_start = 5050u32;
@@ -299,22 +311,22 @@ fn run_locally() {
             (
                 launch_starknet_node(StarknetConfig {
                     node_port_base: port_start + (i * 10),
-                    chain_id: format!("KATANA"),
+                    chain_id: format!("MADARA_DEVNET"),
                     ..default_config.clone()
                 }),
-                format!("KATANA"),
+                format!("MADARA_DEVNET"),
                 metrics_port_start + i,
                 domain_start + i,
             )
         })
         .collect::<Vec<_>>();
 
-    let deployer = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"; // 1st katana account
+    let deployer = "0x3bb306a004034dba19e6cf7b161e7a4fef64bc1078419e8ad1876192f0b8cd1"; // 1st katana account
     let _linker = "validator";
     let validator = &ValidatorConfig {
-        private_key: "0x0014d6672dcb4b77ca36a887e9a11cd9d637d5012468175829e9c6e770c61642"
+        private_key: "0x011830d3641a682d4a690dcc25d1f4b0dac948325ac18f6dd32564371735f320"
             .to_string(),
-        address: "0x00e29882a1fcba1e7e10cad46212257fea5c752a4f9b1b1ec683c503a2cf5c8a".to_string(),
+        address: "0x05e9e93c6235f8ae6c2f4f0069bd30753ec21b26fbad80cfbf5da2c1bc573d69".to_string(),
     };
     let _relayer = "hpl-relayer";
 

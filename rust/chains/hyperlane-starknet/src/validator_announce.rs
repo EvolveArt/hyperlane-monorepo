@@ -96,7 +96,7 @@ impl StarknetValidatorAnnounce {
         let gas_estimate = tx
             .estimate_fee()
             .await
-            .map_err(|e| HyperlaneStarknetError::AccountError(e.to_string()))?
+            .map_err(|e| HyperlaneStarknetError::AccountError(format!("{:#?}", e)))?
             .overall_fee;
 
         let max_cost = gas_estimate * FieldElement::TWO;

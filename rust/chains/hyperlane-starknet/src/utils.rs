@@ -59,13 +59,6 @@ pub async fn get_transaction_receipt(
     rpc.get_transaction_receipt(transaction_hash).await
 }
 
-const KATANA: FieldElement = FieldElement::from_mont([
-    18444096267036800993,
-    18446744073709551615,
-    18446744073709551615,
-    531448038866662896,
-]);
-
 const MADARA_DEVNET: FieldElement = FieldElement::from_mont([
     15288591172878020318,
     18446733455870383543,
@@ -78,8 +71,8 @@ pub fn get_chain_id_from_domain_id(domain_id: u32) -> FieldElement {
     match domain_id {
         23448591 => SEPOLIA,
         23448592 => MAINNET,
-        23448593 => KATANA,
-        23448594 => KATANA,
+        23448593 => MADARA_DEVNET,
+        23448594 => MADARA_DEVNET,
         6363709 => MADARA_DEVNET,
         _ => panic!("Unsupported domain id"),
     }
