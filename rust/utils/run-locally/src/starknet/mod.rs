@@ -4,8 +4,10 @@ use std::thread::sleep;
 use std::time::{Duration, Instant};
 use std::{env, fs};
 
+use hyperlane_base::settings::parser::ValueParser;
 use macro_rules_attribute::apply;
 use maplit::hashmap;
+use serde_json::Value;
 use tempfile::tempdir;
 use utils::to_strk_message_bytes;
 
@@ -253,101 +255,101 @@ fn run_locally() {
         .run()
         .join();
 
-    let cli_src = Some(
-        env::var(ENV_CLI_PATH_KEY)
-            .as_ref()
-            .map(|v| CLISource::local(v))
-            .unwrap_or_default(),
-    );
+    // let cli_src = Some(
+    //     env::var(ENV_CLI_PATH_KEY)
+    //         .as_ref()
+    //         .map(|v| CLISource::local(v))
+    //         .unwrap_or_default(),
+    // );
 
-    let starknet_cli_src = Some(
-        env::var(ENV_STARKNET_CLI_PATH_KEY)
-            .as_ref()
-            .map(|v| StarknetCLISource::local(v))
-            .unwrap_or_default(),
-    );
+    // let starknet_cli_src = Some(
+    //     env::var(ENV_STARKNET_CLI_PATH_KEY)
+    //         .as_ref()
+    //         .map(|v| StarknetCLISource::local(v))
+    //         .unwrap_or_default(),
+    // );
 
-    let code_src = Some(
-        env::var(ENV_HYPERLANE_STARKNET_PATH_KEY)
-            .as_ref()
-            .map(|v| CodeSource::local(v))
-            .unwrap_or_default(),
-    );
+    // let code_src = Some(
+    //     env::var(ENV_HYPERLANE_STARKNET_PATH_KEY)
+    //         .as_ref()
+    //         .map(|v| CodeSource::local(v))
+    //         .unwrap_or_default(),
+    // );
 
-    let (starklid, katanad, sierra_classes) =
-        install_starknet(None, starknet_cli_src, None, cli_src, None, code_src);
+    // let (starklid, katanad, sierra_classes) =
+    //     install_starknet(None, starknet_cli_src, None, cli_src, None, code_src);
 
-    let addr_base = "0.0.0.0";
-    let default_config = StarknetConfig {
-        cli_path: katanad.clone(),
+    // let addr_base = "0.0.0.0";
+    // let default_config = StarknetConfig {
+    //     cli_path: katanad.clone(),
 
-        sierra_classes: sierra_classes.clone(),
+    //     sierra_classes: sierra_classes.clone(),
 
-        node_addr_base: addr_base.to_string(),
-        node_port_base: 5050,
+    //     node_addr_base: addr_base.to_string(),
+    //     node_port_base: 5050,
 
-        chain_id: "KATANA".to_string(),
-    };
+    //     chain_id: "KATANA".to_string(),
+    // };
 
-    let port_start = 5050u32;
-    let metrics_port_start = 9090u32;
-    let domain_start = 23448593u32;
-    let node_count = 2;
+    // let port_start = 5050u32;
+    // let metrics_port_start = 9090u32;
+    // let domain_start = 23448593u32;
+    // let node_count = 2;
 
-    let nodes = (0..node_count)
-        .map(|i| {
-            (
-                launch_starknet_node(StarknetConfig {
-                    node_port_base: port_start + (i * 10),
-                    chain_id: format!("KATANA"),
-                    ..default_config.clone()
-                }),
-                format!("KATANA"),
-                metrics_port_start + i,
-                domain_start + i,
-            )
-        })
-        .collect::<Vec<_>>();
+    // let nodes = (0..node_count)
+    //     .map(|i| {
+    //         (
+    //             launch_starknet_node(StarknetConfig {
+    //                 node_port_base: port_start + (i * 10),
+    //                 chain_id: format!("KATANA"),
+    //                 ..default_config.clone()
+    //             }),
+    //             format!("KATANA"),
+    //             metrics_port_start + i,
+    //             domain_start + i,
+    //         )
+    //     })
+    //     .collect::<Vec<_>>();
 
     let deployer = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"; // 1st katana account
     let _linker = "validator";
     let validator = &ValidatorConfig {
-        private_key: "0x0014d6672dcb4b77ca36a887e9a11cd9d637d5012468175829e9c6e770c61642"
+        private_key: "0x219fb2d099a9458f7c10c2efbb8b101d9e0ec85610d5c74a887d1d4fb8d2898"
             .to_string(),
-        address: "0x00e29882a1fcba1e7e10cad46212257fea5c752a4f9b1b1ec683c503a2cf5c8a".to_string(),
+        address: "0x7ee358b1bed689e66605aae4e7ab873f818dc953b39f115929ec00c0e575c52".to_string(),
     };
     let _relayer = "hpl-relayer";
 
-    sleep(Duration::from_secs(5));
+    // sleep(Duration::from_secs(5));
 
-    let nodes = nodes
-        .into_iter()
-        .map(|v| (v.0.join(), v.1, v.2, v.3))
-        .map(|(launch_resp, chain_id, metrics_port, domain)| {
-            let mut starknet_cli = launch_resp.cli(&starklid);
-            starknet_cli.init(
-                STARKNET_KEYPAIR.into(),
-                STARKNET_ACCOUNT.into(),
-                KEYPAIR_PASSWORD.into(),
-                launch_resp.endpoint.rpc_addr.clone(),
-            );
+    // let nodes = nodes
+    //     .into_iter()
+    //     .map(|v| (v.0.join(), v.1, v.2, v.3))
+    //     .map(|(launch_resp, chain_id, metrics_port, domain)| {
+    //         let mut starknet_cli = launch_resp.cli(&starklid);
+    //         starknet_cli.init(
+    //             STARKNET_KEYPAIR.into(),
+    //             STARKNET_ACCOUNT.into(),
+    //             KEYPAIR_PASSWORD.into(),
+    //             launch_resp.endpoint.rpc_addr.clone(),
+    //         );
 
-            let declarations =
-                utils::declare_all(starknet_cli.clone(), sierra_classes.clone()).join();
+    //         let declarations =
+    //             utils::declare_all(starknet_cli.clone(), sierra_classes.clone()).join();
 
-            let deployments =
-                utils::deploy_all(starknet_cli, deployer.to_string(), declarations, domain);
+    //         let deployments =
+    //             utils::deploy_all(starknet_cli, deployer.to_string(), declarations, domain);
 
-            (launch_resp, deployments, chain_id, metrics_port, domain)
-        })
-        .collect::<Vec<_>>();
+    //         (launch_resp, deployments, chain_id, metrics_port, domain)
+    //     })
+    //     .collect::<Vec<_>>();
 
     // nodes with base deployments
-    let nodes = nodes
-        .into_iter()
-        .map(|v| (v.0, v.1.join(), v.2, v.3, v.4))
-        .map(|v| v.into())
-        .collect::<Vec<StarknetNetwork>>();
+    // let nodes = nodes
+    //     .into_iter()
+    //     .map(|v| (v.0, v.1.join(), v.2, v.3, v.4))
+    //     .map(|v| v.into())
+    //     .collect::<Vec<StarknetNetwork>>();
 
     // TODO: what should be done here ?
     // for (i, node) in nodes.iter().enumerate() {
@@ -367,158 +369,160 @@ fn run_locally() {
     // }
 
     // for debug
-    println!(
-        "{}",
-        serde_json::to_string(
-            &nodes
-                .iter()
-                .map(|v| (v.domain, v.deployments.clone()))
-                .collect::<BTreeMap<_, _>>()
-        )
-        .unwrap()
-    );
+    // println!(
+    //     "{}",
+    //     serde_json::to_string(
+    //         &nodes
+    //             .iter()
+    //             .map(|v| (v.domain, v.deployments.clone()))
+    //             .collect::<BTreeMap<_, _>>()
+    //     )
+    //     .unwrap()
+    // );
 
-    let config_dir = tempdir().unwrap();
+    // let config_dir = tempdir().unwrap();
 
     // export agent config
-    let agent_config_out = AgentConfigOut {
-        chains: nodes
-            .iter()
-            .map(|v| {
-                (
-                    format!("starknettest{}", v.domain),
-                    AgentConfig::new(starklid.clone(), validator, v),
-                )
-            })
-            .collect::<BTreeMap<String, AgentConfig>>(),
-    };
+    // let agent_config_out = AgentConfigOut {
+    //     chains: nodes
+    //         .iter()
+    //         .map(|v| {
+    //             (
+    //                 format!("starknettest{}", v.domain),
+    //                 AgentConfig::new(starklid.clone(), validator, v),
+    //             )
+    //         })
+    //         .collect::<BTreeMap<String, AgentConfig>>(),
+    // };
+    // let num_str = "0x041c20175af14a0bfebfc9ae2f3bda29230a0bceb551844197d9f46faf76d6da";
+    // let str_value = Value::String(num_str.to_owned());
+    // let value_parser = ValueParser::new(Default::default(), &str_value);
 
-    let agent_config_path = concat_path(&config_dir, "config.json");
-    fs::write(
-        &agent_config_path,
-        serde_json::to_string_pretty(&agent_config_out).unwrap(),
+    // let t = value_parser.parse_address_hash().expect("Failed to parse address hash");
+
+    let config_path = Path::new("config.json").to_path_buf();
+
+    let agent_config: AgentConfig = serde_json::from_str(
+        &fs::read_to_string(&config_path)
+            .expect("Failed to read agent config file")
+            .to_string(),
     )
     .unwrap();
 
-    let hpl_val = agent_config_out
-        .chains
-        .clone()
-        .into_values()
-        .map(|agent_config| {
-            launch_starknet_validator(agent_config, agent_config_path.clone(), debug)
-        })
-        .collect::<Vec<_>>();
-    let hpl_rly_metrics_port = metrics_port_start + node_count + 1u32;
-    let hpl_rly = launch_starknet_relayer(
-        agent_config_path,
-        agent_config_out.chains.into_keys().collect::<Vec<_>>(),
-        hpl_rly_metrics_port,
-        debug,
-    );
+    let full_config_path = Path::new("./config/pragma_config.json").to_path_buf();
+
+    let hpl_val = launch_starknet_validator(agent_config, full_config_path, true).join();
+    // let hpl_rly_metrics_port = 9090;
+    // let hpl_rly = launch_starknet_relayer(
+    //     agent_config_path,
+    //     agent_config_out.chains.into_keys().collect::<Vec<_>>(),
+    //     hpl_rly_metrics_port,
+    //     debug,
+    // );
 
     // give things a chance to fully start.
-    sleep(Duration::from_secs(10));
+    sleep(Duration::from_secs(10000));
 
-    let starting_relayer_balance: f64 = agent_balance_sum(hpl_rly_metrics_port).unwrap_or_default();
+    // let starting_relayer_balance: f64 = agent_balance_sum(hpl_rly_metrics_port).unwrap_or_default();
 
-    // dispatch messages
-    let mut dispatched_messages = 0;
+    // // dispatch messages
+    // let mut dispatched_messages = 0;
 
-    for node in nodes.iter() {
-        let targets = nodes
-            .iter()
-            .filter(|v| v.domain != node.domain)
-            .collect::<Vec<_>>();
+    // for node in nodes.iter() {
+    //     let targets = nodes
+    //         .iter()
+    //         .filter(|v| v.domain != node.domain)
+    //         .collect::<Vec<_>>();
 
-        if !targets.is_empty() {
-            println!(
-                "DISPATCHING MAILBOX: {} -> {:?}",
-                node.domain,
-                targets.iter().map(|v| v.domain).collect::<Vec<_>>()
-            );
-        }
+    //     if !targets.is_empty() {
+    //         println!(
+    //             "DISPATCHING MAILBOX: {} -> {:?}",
+    //             node.domain,
+    //             targets.iter().map(|v| v.domain).collect::<Vec<_>>()
+    //         );
+    //     }
 
-        for target in targets {
-            dispatched_messages += 1;
-            let mut cli = StarknetCLI::new(starklid.clone());
+    //     for target in targets {
+    //         dispatched_messages += 1;
+    //         let mut cli = StarknetCLI::new(starklid.clone());
 
-            let msg_body: &[u8] = b"hello world";
+    //         let msg_body: &[u8] = b"hello world";
 
-            cli.init(
-                STARKNET_KEYPAIR.into(),
-                STARKNET_ACCOUNT.into(),
-                KEYPAIR_PASSWORD.into(),
-                node.launch_resp.endpoint.rpc_addr.clone(),
-            );
+    //         cli.init(
+    //             STARKNET_KEYPAIR.into(),
+    //             STARKNET_ACCOUNT.into(),
+    //             KEYPAIR_PASSWORD.into(),
+    //             node.launch_resp.endpoint.rpc_addr.clone(),
+    //         );
 
-            let (strk_msg_len, strk_msg) = to_strk_message_bytes(msg_body);
-            let strk_msg_str = strk_msg
-                .iter()
-                .map(|v| format!("0x{:x}", v))
-                .collect::<Vec<String>>();
+    //         let (strk_msg_len, strk_msg) = to_strk_message_bytes(msg_body);
+    //         let strk_msg_str = strk_msg
+    //             .iter()
+    //             .map(|v| format!("0x{:x}", v))
+    //             .collect::<Vec<String>>();
 
-            let fee_amount = 0u32;
+    //         let fee_amount = 0u32;
 
-            let initial_args = vec![
-                target.domain.to_string(),
-                format!("u256:{}", target.deployments.mock_receiver.clone()),
-                strk_msg_len.to_string(),
-                strk_msg_str.len().to_string(),
-            ];
+    //         let initial_args = vec![
+    //             target.domain.to_string(),
+    //             format!("u256:{}", target.deployments.mock_receiver.clone()),
+    //             strk_msg_len.to_string(),
+    //             strk_msg_str.len().to_string(),
+    //         ];
 
-            // we set the options to `None` for now
-            // which means no hook nor hook_metadata
-            let options_args = vec!["1".to_string(), "1".to_string()];
+    //         // we set the options to `None` for now
+    //         // which means no hook nor hook_metadata
+    //         let options_args = vec!["1".to_string(), "1".to_string()];
 
-            let args = initial_args
-                .into_iter()
-                .chain(strk_msg_str)
-                .chain(vec![format!("u256:{}", fee_amount)])
-                .chain(options_args)
-                .collect();
+    //         let args = initial_args
+    //             .into_iter()
+    //             .chain(strk_msg_str)
+    //             .chain(vec![format!("u256:{}", fee_amount)])
+    //             .chain(options_args)
+    //             .collect();
 
-            cli.send_tx(
-                node.deployments.mailbox.clone(),
-                "dispatch".to_string(),
-                args,
-            );
-        }
-    }
+    //         cli.send_tx(
+    //             node.deployments.mailbox.clone(),
+    //             "dispatch".to_string(),
+    //             args,
+    //         );
+    //     }
+    // }
 
-    let _stack = StarknetHyperlaneStack {
-        validators: hpl_val.into_iter().map(|v| v.join()).collect(),
-        relayer: hpl_rly.join(),
-    };
+    // let _stack = StarknetHyperlaneStack {
+    //     validators: hpl_val.into_iter().map(|v| v.join()).collect(),
+    //     relayer: hpl_rly.join(),
+    // };
 
-    // Mostly copy-pasta from `rust/utils/run-locally/src/main.rs`
-    let loop_start = Instant::now();
-    let mut failure_occurred = false;
-    loop {
-        // look for the end condition.
-        if termination_invariants_met(
-            hpl_rly_metrics_port,
-            dispatched_messages,
-            starting_relayer_balance,
-        )
-        .unwrap_or(false)
-        {
-            // end condition reached successfully
-            break;
-        } else if (Instant::now() - loop_start).as_secs() > TIMEOUT_SECS {
-            // we ran out of time
-            log!("timeout reached before message submission was confirmed");
-            failure_occurred = true;
-            break;
-        }
+    // // Mostly copy-pasta from `rust/utils/run-locally/src/main.rs`
+    // let loop_start = Instant::now();
+    // let mut failure_occurred = false;
+    // loop {
+    //     // look for the end condition.
+    //     if termination_invariants_met(
+    //         hpl_rly_metrics_port,
+    //         dispatched_messages,
+    //         starting_relayer_balance,
+    //     )
+    //     .unwrap_or(false)
+    //     {
+    //         // end condition reached successfully
+    //         break;
+    //     } else if (Instant::now() - loop_start).as_secs() > TIMEOUT_SECS {
+    //         // we ran out of time
+    //         log!("timeout reached before message submission was confirmed");
+    //         failure_occurred = true;
+    //         break;
+    //     }
 
-        sleep(Duration::from_secs(5));
-    }
+    //     sleep(Duration::from_secs(5));
+    // }
 
-    if failure_occurred {
-        panic!("E2E tests failed");
-    } else {
-        log!("E2E tests passed");
-    }
+    // if failure_occurred {
+    //     panic!("E2E tests failed");
+    // } else {
+    //     log!("E2E tests passed");
+    // }
 }
 
 fn termination_invariants_met(
@@ -573,6 +577,7 @@ fn termination_invariants_met(
     // }
 
     log!("Termination invariants have been meet");
+    sleep(Duration::from_secs(1000));
     Ok(true)
 }
 

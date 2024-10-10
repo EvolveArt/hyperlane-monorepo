@@ -134,6 +134,8 @@ impl Indexer<HyperlaneMessage> for StarknetMailboxIndexer {
             keys: Some(vec![vec![key]]),
         };
 
+        println!("FILTER: {:?}", filter);
+
         let chunk_size = range.end() - range.start() + 1;
 
         let mut events: Vec<(Indexed<HyperlaneMessage>, LogMeta)> = self
@@ -303,6 +305,8 @@ impl Indexer<MerkleTreeInsertion> for StarknetMerkleTreeHookIndexer {
             address: Some(self.contract.address),
             keys: Some(vec![vec![key]]),
         };
+
+        println!("TRIE FILTER: {:?}", filter);
 
         let chunk_size = range.end() - range.start() + 1;
 
