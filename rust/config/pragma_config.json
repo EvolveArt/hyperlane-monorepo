@@ -4,10 +4,10 @@
       "name": "pragmadevnet",
       "chainId": "6120767554663640178324841317716",
       "domainId": 6363709,
-      "mailbox": "0x06a2f7a45b29fc7c9854a6fe5228bdff5311884c804cb6b46553ba4cde235f1e",
+      "mailbox": "0x05bfb1a565a1fa2eb33c5d8e587a7aeb5e6846d3aadf9fecb529ace1e3457096",
       "interchainGasPaymaster": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
-      "validatorAnnounce": "0x0763f37d77dfbca6e01a7a3299a73a86086cda87add4ae8ac35cf6ca278a893b",
-      "merkleTreeHook": "0x03531fcf312035d230bc0e68fc0198457f44a82d0f1f67f418b227b80788a390",
+      "validatorAnnounce": "0x0022245997c5f4f5e6eb13764be91de00b4299147ce7f516dbad925c7aeb69d3",
+      "merkleTreeHook": "0x01520c48d7aced426c41e8b71587add7fb64c9945115d3ea677a49f45ddf81e3",
       "protocol": "starknet",
       "blocks": {
         "reorgPeriod": 0,
@@ -19,7 +19,7 @@
         }
       ],
       "index": {
-        "from": 9950,
+        "from": 0,
         "chunk": 1
       },
       "signer": {
