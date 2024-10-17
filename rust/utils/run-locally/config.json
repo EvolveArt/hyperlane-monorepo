@@ -1,10 +1,10 @@
 {
   "name": "pragmadevnet",
   "domainId": 6363709,
-  "mailbox": "0x05bfb1a565a1fa2eb33c5d8e587a7aeb5e6846d3aadf9fecb529ace1e3457096",
+  "mailbox": "0x026e76ecc3dda4a22624c40f9a2aa63c6137f233c3a17d979e3edd5c8d6347ce",
   "interchainGasPaymaster": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
-  "validatorAnnounce": "0x0022245997c5f4f5e6eb13764be91de00b4299147ce7f516dbad925c7aeb69d3",
-  "merkleTreeHook": "0x01520c48d7aced426c41e8b71587add7fb64c9945115d3ea677a49f45ddf81e3",
+  "validatorAnnounce": "0x01f4d0450cf9956fa33026ca10c80f30179c1e44ec973ce24a93884085aee943",
+  "merkleTreeHook": "0x0419e2af9a3c20b33d146a813d46f7578748c8a384a414c2e9695e5738f4f743",
   "protocol": "starknet",
   "chainId": "6120767554663640178324841317716",
   "rpcUrls": [
@@ -19,8 +19,8 @@
   "metricsPort": 9090,
   "contractAddressBytes": 32,
   "signer": {
-    "key": "0x07bec814b18b1d193eaa7cec41007e04bf0a98453b06ec7582aa29882c52eb7b",
-    "address": "0x02bb0bbae443b8fe0904105139bd802e2e26bbc852e22c0a4fe1ee633bd0fbf2",
+    "key": "0x00177100ae65c71074126963e695e17adf5b360146f960378b5cdfd9ed69870b",
+    "address": "0x001ed489f5d8672c93268d49b6b43cd1dd8e8713846ebede91bbd64755743dec",
     "type": "starkKey"
   }
 }
