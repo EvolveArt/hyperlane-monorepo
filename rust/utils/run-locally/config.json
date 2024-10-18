@@ -14,7 +14,8 @@
   ],
   "index": {
     "from": 0,
-    "chunk": 1
+    "chunk": 100,
+    "mode": "block"
   },
   "metricsPort": 9090,
   "contractAddressBytes": 32,

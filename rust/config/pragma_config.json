@@ -20,7 +20,8 @@
       ],
       "index": {
         "from": 0,
-        "chunk": 1
+        "chunk": 100,
+        "mode": "block"
       },
       "signer": {
         "key": "0x00177100ae65c71074126963e695e17adf5b360146f960378b5cdfd9ed69870b",
