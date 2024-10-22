@@ -9,10 +9,6 @@
       "validatorAnnounce": "0x049c1f9e4da6bd2c020cb45f4f4880c5b2a69a591587bb608acd6b2b0b5b2c74",
       "merkleTreeHook": "0x0536953cdd0dd5b8e24428e4fb6eab5c143daba15f62b24606e50d822508faef",
       "protocol": "starknet",
-      "blocks": {
-        "reorgPeriod": 0,
-        "confirmations": 0
-      },
       "rpcUrls": [
         {
           "http": "https://madara-pragma-prod.karnot.xyz"
@@ -22,6 +18,11 @@
         "from": 0,
         "chunk": 100,
         "mode": "block"
+      },
+      "blocks": {
+        "confirmations": 1,
+        "estimateBlockTime": 2,
+        "reorgPeriod": 1
       },
       "signer": {
         "key": "0x00177100ae65c71074126963e695e17adf5b360146f960378b5cdfd9ed69870b",
