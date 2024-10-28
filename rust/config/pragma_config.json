@@ -16,7 +16,7 @@
       ],
       "index": {
         "from": 0,
-        "chunk": 100,
+        "chunk": 999,
         "mode": "block"
       },
       "blocks": {
